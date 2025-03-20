@@ -1,0 +1,26 @@
+fastapi==0.103.1
+uvicorn==0.23.2
+python-multipart==0.0.6
+python-dotenv==1.0.0
+httpx==0.24.1
+openai==0.27.8
+pydantic==1.10.7
+jinja2==3.1.2
+pytest==7.4.1
+requests==2.31.0
+aiofiles==23.2.1
+python-jose[cryptography]==3.3.0
+passlib==1.7.4
+bcrypt==4.0.1
+
+# Azure services (optional)
+# Install these packages to use actual Azure services
+# azure-ai-formrecognizer>=3.2.0
+# azure-storage-blob>=12.13.0
+# azure-identity>=1.10.0
+# azure-cosmos>=4.3.0
+# azure-ai-language-questionanswering>=1.1.0
+# azure-cognitiveservices-speech>=1.25.0
+# azure-search-documents>=11.4.0
+# pandas>=2.0.0
+# numpy>=1.20.0
