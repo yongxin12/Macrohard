@@ -59,7 +59,7 @@ done
 # Stop containers if requested
 if $STOP; then
     echo "Stopping all containers..."
-    docker-compose down
+    docker compose down
     exit 0
 fi
 
@@ -99,9 +99,9 @@ fi
 if [ "$MODE" = "demo" ]; then
     echo "Starting in DEMO mode..."
     if $BUILD; then
-        docker-compose up -d --build
+        docker compose up -d --build
     else
-        docker-compose up -d
+        docker compose up -d
     fi
     echo "Services started. Access the application at:"
     echo "  - Frontend: http://localhost:3000"
@@ -109,9 +109,9 @@ if [ "$MODE" = "demo" ]; then
 else
     echo "Starting with AZURE services..."
     if $BUILD; then
-        docker-compose -f docker-compose.azure.yml up -d --build
+        docker compose -f docker-compose.azure.yml up -d --build
     else
-        docker-compose -f docker-compose.azure.yml up -d
+        docker compose -f docker-compose.azure.yml up -d
     fi
     echo "Services started with Azure integration. Access the application at:"
     echo "  - Frontend: http://localhost:3000"
