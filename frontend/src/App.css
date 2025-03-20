@@ -1,0 +1,415 @@
+/* App.css - Main styles for the Job Coach AI Assistant */
+
+/* Global styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-container {
+  display: flex;
+  flex: 1;
+}
+
+/* Header styles */
+.app-header {
+  background-color: #0078d4;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-logo img {
+  height: 40px;
+}
+
+.header-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #0078d4;
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 260px;
+  background-color: #fff;
+  padding: 1rem 0;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+  z-index: 100;
+}
+
+.sidebar-nav {
+  list-style-type: none;
+}
+
+.sidebar-nav-item {
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: background-color 0.2s;
+}
+
+.sidebar-nav-item:hover {
+  background-color: #f0f0f0;
+}
+
+.sidebar-nav-item.active {
+  background-color: #e1effa;
+  border-left: 4px solid #0078d4;
+  padding-left: calc(1.5rem - 4px);
+}
+
+.sidebar-nav-item-icon {
+  font-size: 20px;
+  width: 24px;
+  text-align: center;
+}
+
+.sidebar-nav-item-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Main content area */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+/* Page header */
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #323130;
+}
+
+.page-subtitle {
+  font-size: 1rem;
+  color: #605e5c;
+}
+
+/* Card styles */
+.card {
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* Dashboard styles */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-title {
+  font-size: 1rem;
+  color: #605e5c;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #0078d4;
+  margin-bottom: 0.5rem;
+}
+
+.stat-description {
+  font-size: 0.875rem;
+  color: #605e5c;
+}
+
+/* Form styles */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d2d0ce;
+  border-radius: 2px;
+  font-size: 1rem;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #0078d4;
+  box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.2);
+}
+
+.form-helper {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #605e5c;
+}
+
+.form-error {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #d13438;
+}
+
+/* Button styles */
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 2px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-primary {
+  background-color: #0078d4;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #106ebe;
+}
+
+.btn-secondary {
+  background-color: #f4f4f4;
+  color: #323130;
+}
+
+.btn-secondary:hover {
+  background-color: #e1dfdd;
+}
+
+.btn-danger {
+  background-color: #d13438;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #a4262c;
+}
+
+/* Table styles */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #edebe9;
+}
+
+.table th {
+  font-weight: 600;
+  color: #605e5c;
+}
+
+.table tbody tr:hover {
+  background-color: #f3f2f1;
+}
+
+/* Loading indicator */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  font-size: 1rem;
+  color: #605e5c;
+}
+
+/* Assistant chat styles */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 200px);
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.chat-message {
+  margin-bottom: 1.5rem;
+  max-width: 80%;
+}
+
+.chat-message-user {
+  align-self: flex-end;
+  margin-left: auto;
+  background-color: #eaf6ff;
+  padding: 1rem;
+  border-radius: 8px 8px 0 8px;
+}
+
+.chat-message-assistant {
+  align-self: flex-start;
+  background-color: #f3f2f1;
+  padding: 1rem;
+  border-radius: 8px 8px 8px 0;
+}
+
+.chat-input {
+  display: flex;
+  padding: 1rem;
+  border-top: 1px solid #edebe9;
+}
+
+.chat-input-field {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #d2d0ce;
+  border-radius: 4px;
+  font-size: 1rem;
+  resize: none;
+}
+
+.chat-input-button {
+  margin-left: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #0078d4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chat-input-button:hover {
+  background-color: #106ebe;
+}
+
+/* Dropzone styles */
+.dropzone {
+  border: 2px dashed #d2d0ce;
+  border-radius: 4px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.dropzone:hover {
+  border-color: #0078d4;
+}
+
+.dropzone-active {
+  border-color: #0078d4;
+  background-color: #f0f6ff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    padding: 0.5rem 0;
+  }
+  
+  .main-content {
+    padding: 1rem;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .stat-card {
+    margin-bottom: 1rem;
+  }
+} 
