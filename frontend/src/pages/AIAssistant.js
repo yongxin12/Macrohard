@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
-import { useMsal } from '@azure/msal-react';
-import { getTokenForAPI, apiConfig } from '../authConfig';
 import {
   Button,
   Input,
@@ -10,7 +8,6 @@ import {
   Dropdown,
   Option,
   Spinner,
-  Title,
   Text,
   ToggleButton,
   Card,
@@ -18,12 +15,12 @@ import {
   makeStyles
 } from '@fluentui/react-components';
 import {
-  SendRegular,
-  SendFilled,
-  MicOn,
-  Mic,
-  Delete,
-  PeopleCommunity
+  Send24Regular,
+  Send24Filled,
+  Mic24Regular,
+  Mic24Filled,
+  Delete24Regular,
+  People24Regular
 } from '@fluentui/react-icons';
 
 const useStyles = makeStyles({
@@ -48,9 +45,7 @@ const useStyles = makeStyles({
     borderRadius: '4px',
     border: '1px solid #edebe9',
     backgroundColor: '#fff',
-    overflowY: 'auto',
-    display: 'flex',
-    flexDirection: 'column'
+    overflowY: 'auto'
   },
   message: {
     maxWidth: '80%',
@@ -90,7 +85,6 @@ const useStyles = makeStyles({
 });
 
 const AIAssistant = () => {
-  const { instance, accounts } = useMsal();
   const styles = useStyles();
   
   const [messages, setMessages] = useState([]);
@@ -389,21 +383,20 @@ What specific aspect of job coaching would you like more information about?
   return (
     <div className={styles.assistantContainer}>
       <div className={styles.chatHeader}>
-        <Title as="h1">AI Assistant</Title>
-        <Dropdown 
-          placeholder="Select a client (optional)"
-          className={styles.clientSelector}
-          value={selectedClient?.name || ''}
-          onOptionSelect={(_, data) => {
-            const client = clients.find(c => c.id === data.optionValue);
-            setSelectedClient(client);
-          }}
-        >
-          <Option key="none" value="">No client selected</Option>
-          {clients.map(client => (
-            <Option key={client.id} value={client.id}>{client.name}</Option>
-          ))}
-        </Dropdown>
+        <Text size={800} weight="bold">AI Assistant</Text>
+        <div className={styles.clientSelector}>
+          <Dropdown
+            placeholder="Select a client"
+            value={selectedClient}
+            onChange={(e, data) => setSelectedClient(data.value)}
+          >
+            {clients.map((client) => (
+              <Option key={client.id} value={client.id}>
+                {client.name}
+              </Option>
+            ))}
+          </Dropdown>
+        </div>
       </div>
       
       <Card>
@@ -411,7 +404,7 @@ What specific aspect of job coaching would you like more information about?
           header={<Text weight="semibold">Job Coach Assistant</Text>}
           action={
             <Button 
-              icon={<Delete />} 
+              icon={<Delete24Regular />} 
               appearance="subtle"
               onClick={clearConversation}
               title="Clear conversation"
@@ -424,7 +417,7 @@ What specific aspect of job coaching would you like more information about?
         <div className={styles.chatArea}>
           {messages.length === 0 && (
             <div style={{ textAlign: 'center', color: '#605e5c', margin: '2rem' }}>
-              <PeopleCommunity fontSize={32} />
+              <People24Regular fontSize={32} />
               <Text as="p" style={{ marginTop: '8px' }}>
                 Ask me anything about job coaching, forms, accommodations, or client support!
               </Text>
@@ -462,7 +455,7 @@ What specific aspect of job coaching would you like more information about?
         
         <div className={styles.inputArea}>
           <ToggleButton
-            icon={isRecording ? <MicOn /> : <Mic />}
+            icon={isRecording ? <Mic24Filled /> : <Mic24Regular />}
             checked={isRecording}
             onClick={toggleVoiceRecording}
             appearance="subtle"
@@ -483,7 +476,7 @@ What specific aspect of job coaching would you like more information about?
           />
           
           <Button
-            icon={<SendRegular />}
+            icon={<Send24Regular />}
             iconPosition="after"
             appearance="primary"
             onClick={handleSendMessage}

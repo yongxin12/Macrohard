@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
-  Home,
-  People,
-  Document,
-  ChatBot,
-  DocumentPdf,
-  Settings
+  Home24Regular,
+  People24Regular,
+  Document24Regular,
+  Chat24Regular,
+  DocumentPdf24Regular,
+  Settings24Regular
 } from '@fluentui/react-icons';
 
 const Sidebar = () => {
@@ -14,32 +14,32 @@ const Sidebar = () => {
   
   const menuItems = [
     {
-      icon: <Home />,
+      icon: <Home24Regular />,
       text: 'Dashboard',
       path: '/'
     },
     {
-      icon: <People />,
+      icon: <People24Regular />,
       text: 'Clients',
       path: '/clients'
     },
     {
-      icon: <Document />,
+      icon: <Document24Regular />,
       text: 'Documents',
       path: '/documents'
     },
     {
-      icon: <ChatBot />,
+      icon: <Chat24Regular />,
       text: 'AI Assistant',
       path: '/assistant'
     },
     {
-      icon: <DocumentPdf />,
+      icon: <DocumentPdf24Regular />,
       text: 'Reports',
       path: '/reports'
     },
     {
-      icon: <Settings />,
+      icon: <Settings24Regular />,
       text: 'Settings',
       path: '/settings'
     }

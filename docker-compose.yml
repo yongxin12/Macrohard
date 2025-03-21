@@ -5,13 +5,17 @@ services:
     build: ./backend
     ports:
       - "8000:8000"
-    environment:
-      - DEMO_MODE=true
-      - BACKEND_PORT=8000
     env_file:
-      - .env.demo
+      - .env
     volumes:
       - ./backend:/app
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
+      - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT}
+      - USE_AZURE_OPENAI=${USE_AZURE_OPENAI}
+      - DEPLOYMENT_NAME=${DEPLOYMENT_NAME}
+      - CORS_ORIGINS=http://localhost:3000,http://frontend:80
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
@@ -22,12 +26,11 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "3000:3000"
+      - "3000:80"
+    environment:
+      - BACKEND_URL=http://backend:8000
     depends_on:
       - backend
-    environment:
-      - REACT_APP_API_URL=http://localhost:8000
-      - NODE_OPTIONS=--openssl-legacy-provider
     env_file:
       - .env.demo
     volumes:

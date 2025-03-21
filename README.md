@@ -3,6 +3,19 @@ AI for supported employment job coaches to improve employment for people with di
 
 ## Quick Start
 
+1. **Environment Setup**
+   - For detailed environment configuration instructions, see [Environment Setup Guide](docs/ENVIRONMENT_SETUP.md)
+   - Choose between Demo Mode, Local Development, or Azure Integration
+
+2. **Run with Docker**
+   ```bash
+   docker compose up --build
+   ```
+
+3. **Access the Application**
+   - Frontend: http://localhost:3000/demo.html
+   - Backend: http://localhost:8000
+
 ### Prerequisites
 - Docker Desktop installed and running
 - Git

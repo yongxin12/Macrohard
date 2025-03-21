@@ -1,14 +1,8 @@
-FROM node:16-alpine
+FROM nginx:alpine
 
-WORKDIR /app
+COPY demo.html /usr/share/nginx/html/demo.html
+COPY startup.sh /startup.sh
 
-COPY package*.json ./
-RUN npm install
+RUN chmod +x /startup.sh
 
-COPY . .
-
-EXPOSE 3000
-
-ENV NODE_OPTIONS=--openssl-legacy-provider
-
-CMD ["npm", "start"] 
+CMD ["/startup.sh"] 
