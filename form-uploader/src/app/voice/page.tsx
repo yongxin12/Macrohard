@@ -491,6 +491,15 @@ export default function VoiceInputPage() {
     setParsedFormData(newData);
   };
 
+  // Try explicitly requesting permissions
+  useEffect(() => {
+    navigator.permissions.query({name: 'microphone' as PermissionName})
+      .then(permissionStatus => {
+        console.log('Microphone permission status:', permissionStatus.state);
+        // possible states: 'granted', 'denied', or 'prompt'
+      });
+  }, []);
+
   return (
     <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-md p-6 mt-8">
       <div className="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
