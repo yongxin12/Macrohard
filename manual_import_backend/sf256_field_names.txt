@@ -1,4 +1,0 @@
-Name Last First Middle Initial
-Date of Birth MMYYYY
-Social Security Number
-Code
