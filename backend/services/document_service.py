@@ -69,39 +69,76 @@ class DocumentService:
             # If we have a client, use Azure Document Intelligence
             if self.client:
                 with open(file_path, "rb") as f:
+                    logger.info("Starting I-9 form analysis with prebuilt-document model")
                     poller = self.client.begin_analyze_document(
                         "prebuilt-document", document=f.read()
                     )
                 result = poller.result()
                 
                 # Extract relevant fields for I-9 form
-                extracted_data = {}
+                extracted_data = {
+                    "document_type": "I-9 Form",
+                    "fields_detected": 0,
+                    "fields": {},
+                    "tables": []
+                }
+
+                # Extract all text content first
+                all_text = ""
+                for page in result.pages:
+                    for line in page.lines:
+                        all_text += line.content + "\n"
                 
-                # Extract employee info from form
-                for field in result.key_value_pairs:
-                    key = field.key.content if field.key else ""
-                    value = field.value.content if field.value else ""
-                    
-                    # Map common I-9 fields
-                    if "name" in key.lower():
-                        extracted_data["employee_name"] = value
-                    elif "address" in key.lower():
-                        extracted_data["address"] = value
-                    elif "ssn" in key.lower() or "social security" in key.lower():
-                        extracted_data["ssn"] = value
-                    elif "date of birth" in key.lower() or "birth date" in key.lower():
-                        extracted_data["date_of_birth"] = value
-                    elif "citizenship" in key.lower():
-                        extracted_data["citizenship_status"] = value
-                    else:
-                        # Store other fields with their original keys
+                # Look for common I-9 fields in the text
+                field_patterns = {
+                    "last_name": r"Last Name.{0,50}?([A-Za-z\- ]+)",
+                    "first_name": r"First Name.{0,50}?([A-Za-z\- ]+)",
+                    "middle_initial": r"Middle Initial.{0,50}?([A-Za-z])",
+                    "address": r"Address.{0,50}?([A-Za-z0-9\- ,\.]+)",
+                    "apt_number": r"Apt\. Number.{0,50}?([A-Za-z0-9\- ]+)",
+                    "city": r"City.{0,50}?([A-Za-z\- ]+)",
+                    "state": r"State.{0,50}?([A-Z]{2})",
+                    "zip_code": r"ZIP Code.{0,50}?(\d{5})",
+                    "ssn": r"Social Security Number.{0,50}?(\d{3}-\d{2}-\d{4})",
+                    "email": r"E-mail Address.{0,50}?([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})",
+                    "phone": r"Telephone Number.{0,50}?(\(\d{3}\) \d{3}-\d{4}|\d{3}-\d{3}-\d{4})"
+                }
+
+                import re
+                for field, pattern in field_patterns.items():
+                    match = re.search(pattern, all_text)
+                    if match:
+                        extracted_data["fields"][field] = match.group(1).strip()
+                        extracted_data["fields_detected"] += 1
+
+                # Extract tables (for List A/B/C documents)
+                if hasattr(result, 'tables'):
+                    for table in result.tables:
+                        table_data = []
+                        for cell in table.cells:
+                            table_data.append({
+                                "row_index": cell.row_index,
+                                "column_index": cell.column_index,
+                                "content": cell.content
+                            })
+                        extracted_data["tables"].append(table_data)
+
+                # Extract key-value pairs
+                if hasattr(result, 'key_value_pairs'):
+                    for field in result.key_value_pairs:
+                        key = field.key.content if field.key else ""
+                        value = field.value.content if field.value else ""
+                        
                         clean_key = key.strip().replace(" ", "_").lower()
                         if clean_key and value:
-                            extracted_data[clean_key] = value
+                            extracted_data["fields"][clean_key] = value.strip()
+                            extracted_data["fields_detected"] += 1
                 
+                logger.info(f"Completed I-9 form analysis. Detected {extracted_data['fields_detected']} fields.")
                 return extracted_data
             else:
                 # Return mock data if no client
+                logger.warning("No Azure client available, returning mock data")
                 return self._get_mock_data("i9")
         except Exception as e:
             logger.error(f"Error processing I-9 form: {str(e)}")

@@ -290,27 +290,76 @@
                             <td>John Doe</td>
                             <td>Autism</td>
                             <td>Employed</td>
-                            <td><a href="#">View Details</a></td>
+                            <td><button onclick="viewClientDetails('client1')">View Details</button></td>
                         </tr>
                         <tr>
                             <td>Jane Smith</td>
                             <td>Hearing impairment</td>
                             <td>Job seeking</td>
-                            <td><a href="#">View Details</a></td>
+                            <td><button onclick="viewClientDetails('client2')">View Details</button></td>
                         </tr>
                         <tr>
                             <td>Bob Johnson</td>
                             <td>Physical disability</td>
                             <td>In training</td>
-                            <td><a href="#">View Details</a></td>
+                            <td><button onclick="viewClientDetails('client3')">View Details</button></td>
                         </tr>
                     </tbody>
                 </table>
+
+                <!-- Client Detail View -->
+                <div id="client-detail" style="display: none; margin-top: 20px;">
+                    <h3>Client Details</h3>
+                    <div id="client-info" style="margin-top: 20px; padding: 20px; background-color: #f5f5f5; border-radius: 5px;">
+                        Loading...
+                    </div>
+                    <button onclick="hideClientDetails()" style="margin-top: 10px;">Back to List</button>
+                </div>
             </div>
         </main>
     </div>
 
     <script>
+        // Client detail functionality
+        function viewClientDetails(clientId) {
+            // Show loading state
+            document.getElementById('client-detail').style.display = 'block';
+            document.querySelector('#clients-page table').style.display = 'none';
+            
+            // Fetch client details
+            fetch(`http://localhost:8000/clients/${clientId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const client = data.client;
+                    const clientInfo = document.getElementById('client-info');
+                    
+                    // Create detail view HTML
+                    let html = `
+                        <div style="display: grid; grid-template-columns: 120px 1fr; gap: 10px;">
+                            <strong>Name:</strong>
+                            <span>${client.name}</span>
+                            
+                            <strong>Disability:</strong>
+                            <span>${client.disability}</span>
+                            
+                            <strong>Job Status:</strong>
+                            <span>${client.job_status}</span>
+                        </div>
+                    `;
+                    
+                    clientInfo.innerHTML = html;
+                })
+                .catch(error => {
+                    document.getElementById('client-info').innerHTML = 
+                        '<p style="color: red;">Error loading client details. Please try again.</p>';
+                });
+        }
+
+        function hideClientDetails() {
+            document.getElementById('client-detail').style.display = 'none';
+            document.querySelector('#clients-page table').style.display = 'table';
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             // Navigation
             const navItems = document.querySelectorAll('nav li');

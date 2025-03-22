@@ -52,8 +52,12 @@ async def process_document(request: Request):
     document_type = form_data.get("document_type")
     file = form_data.get("file")
     
+    print(f"Processing document for client {client_id}, type: {document_type}")
+    print(f"File info: {file.filename}, content_type: {file.content_type}")
+    
     # Check if we're in demo mode
     demo_mode = os.getenv("DEMO_MODE", "true").lower() == "true"
+    print(f"Demo mode: {demo_mode}")
     
     if demo_mode:
         # Mock extraction based on document type
@@ -86,12 +90,15 @@ async def process_document(request: Request):
             endpoint = os.getenv("AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT")
             key = os.getenv("AZURE_DOCUMENT_INTELLIGENCE_KEY")
             
+            print(f"Using Azure Document Intelligence at endpoint: {endpoint}")
+            
             if not endpoint or not key:
                 raise HTTPException(status_code=500, detail="Azure Document Intelligence credentials not found")
             
             # Prepare the file for upload
             file_content = await file.read()
             file_bytes = io.BytesIO(file_content)
+            print(f"File size: {len(file_content)} bytes")
             
             # Choose the right model based on document type
             model_id = "prebuilt-document" # Default model
@@ -101,6 +108,8 @@ async def process_document(request: Request):
                 model_id = "prebuilt-document" # For document extraction
             elif document_type == "job_application":
                 model_id = "prebuilt-layout" # For form extraction
+            
+            print(f"Using model: {model_id}")
             
             # Set up API endpoint
             url = f"{endpoint}formrecognizer/documentModels/{model_id}:analyze?api-version=2023-07-31"
@@ -112,13 +121,18 @@ async def process_document(request: Request):
             }
             
             # Make the request
+            print("Sending request to Azure Document Intelligence...")
             response = requests.post(url, headers=headers, data=file_bytes)
             
+            print(f"Response status: {response.status_code}")
+            print(f"Response headers: {response.headers}")
             if response.status_code != 202:
+                print(f"Error response: {response.text}")
                 raise Exception(f"Failed to analyze document: {response.text}")
             
             # Get the operation location to check status
             operation_location = response.headers["Operation-Location"]
+            print(f"Operation location: {operation_location}")
             
             # Poll for results (with timeout)
             max_retries = 50
@@ -130,11 +144,13 @@ async def process_document(request: Request):
                 )
                 
                 result = status_response.json()
+                print(f"Status check {i+1}: {result.get('status')}")
                 
                 if "status" in result:
                     if result["status"] == "succeeded":
                         break
                     if result["status"] == "failed":
+                        print(f"Processing failed: {result}")
                         raise Exception(f"Document analysis failed: {result}")
                 
                 # Wait before polling again
@@ -149,6 +165,7 @@ async def process_document(request: Request):
             # Basic extraction from analysis results
             if "analyzeResult" in result:
                 extracted_content = result["analyzeResult"]
+                print(f"Extracted content: {json.dumps(extracted_content, indent=2)}")
                 
                 # Simplified extraction - in a real app, you'd parse specific fields
                 if document_type == "i9":
@@ -158,6 +175,18 @@ async def process_document(request: Request):
                         "extracted_text": "Document processed with Azure Document Intelligence",
                         "fields_detected": len(extracted_content.get("documents", [{}])[0].get("fields", {})) if "documents" in extracted_content and extracted_content["documents"] else 0
                     }
+                    
+                    # Add all detected key-value pairs
+                    if "keyValuePairs" in extracted_content:
+                        for pair in extracted_content["keyValuePairs"]:
+                            if pair.get("key") and pair.get("value"):
+                                key = pair["key"].get("content", "").strip().lower().replace(" ", "_")
+                                value = pair["value"].get("content", "").strip()
+                                if key and value:
+                                    extracted_fields[key] = value
+                    
+                    print(f"Final extracted fields: {json.dumps(extracted_fields, indent=2)}")
+                    
                 elif document_type == "schedule_a":
                     extracted_fields = {
                         "document_type": "Schedule A Letter",
@@ -178,6 +207,7 @@ async def process_document(request: Request):
                     }
             
         except Exception as e:
+            print(f"Error processing document: {str(e)}")
             # If Azure Document Intelligence fails, fallback to demo extraction
             print(f"Error using Azure Document Intelligence: {str(e)}")
             
